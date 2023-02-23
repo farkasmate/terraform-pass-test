@@ -1,0 +1,26 @@
+services:
+  pass:
+    build:
+      target: PASS
+    entrypoint: /usr/bin/pass
+    environment: &env
+      GNUPGHOME: /project/gpg
+      PASSWORD_STORE_DIR: /project/pass
+      PASSWORD_STORE_GPG_OPTS: "--armor"
+    volumes:
+      - ./:/project/:rw
+    working_dir: /project/
+    user: "${UID:-1000}:${GID:-1000}"
+
+  terraform:
+    build:
+      target: TERRAFORM
+    command: plan
+    environment:
+      GNUPGHOME: /project/gpg
+      PASSWORD_STORE_DIR: /project/pass
+      PASSWORD_STORE_GPG_OPTS: "--armor"
+    volumes:
+      - ./:/project/:rw
+    working_dir: /project/
+    user: "${UID:-1000}:${GID:-1000}"
